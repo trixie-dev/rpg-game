@@ -14,7 +14,7 @@ public class InteractiveObject : MonoBehaviour
     void Update()
     {
         isPlayer = Physics.CheckSphere(transform.position, reachRadius, player);
-        print(isPlayer);
+        
 
     }
     private void OnDrawGizmos()

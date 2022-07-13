@@ -1,10 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class PlayerController : MonoBehaviour
+public class Mover : Fighter
 {
     private Camera cam;
-    private NavMeshAgent agent;
+    //private NavMeshAgent agent;
 
     public CharacterController controller;
     [SerializeField] private float speed = 6f;
@@ -16,17 +17,13 @@ public class PlayerController : MonoBehaviour
 
     Vector3 velocity;
     bool isGrounded;
-    
     void Start()
     {
         cam = Camera.main;
         //agent = GetComponent<NavMeshAgent>();
     }
-
-    // Update is called once per frame
-    void FixedUpdate()
+    protected virtual void ObjectMove(float horizontal, float vertical)
     {
-        
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
@@ -34,16 +31,15 @@ public class PlayerController : MonoBehaviour
             velocity.y = -2f;
 
         }
+
         
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
         controller.Move(direction * speed * Time.deltaTime);
-        
+
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
-        
+
         /*
         if (Input.GetMouseButton(1))
         {
@@ -54,8 +50,5 @@ public class PlayerController : MonoBehaviour
             }
         }
         */
-
-        
     }
-    
 }
