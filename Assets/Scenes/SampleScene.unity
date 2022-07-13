@@ -4968,7 +4968,7 @@ GameObject:
   - component: {fileID: 390494420}
   - component: {fileID: 390494419}
   m_Layer: 7
-  m_Name: Mana
+  m_Name: Mana Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5622,7 +5622,7 @@ GameObject:
   - component: {fileID: 429100028}
   - component: {fileID: 429100027}
   m_Layer: 7
-  m_Name: HP
+  m_Name: HP Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8068,7 +8068,7 @@ GameObject:
   - component: {fileID: 621706283}
   - component: {fileID: 621706282}
   m_Layer: 7
-  m_Name: Mana Count
+  m_Name: Mana Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9534,7 +9534,7 @@ MonoBehaviour:
   ManaText: {fileID: 621706282}
   levelText: {fileID: 536060806}
   XPText: {fileID: 513796337}
-  goldText: {fileID: 1362429334}
+  goldAmountText: {fileID: 1362429334}
   HPBar: {fileID: 429100026}
   ManaBar: {fileID: 390494418}
   XPBar: {fileID: 1520709444}
@@ -13261,12 +13261,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e24b49aae4c764488008bc1ac992741, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  figheterData:
+  cooldown: 0
+  fighterData:
     maxHP: 100
+    currHP: 88
     maxMana: 50
+    currMana: 2
     maxStamina: 100
-    currHP: 50
-    currMana: 25
     currStamina: 100
     moveSpeed: 6
     attack: 10
@@ -13286,7 +13287,7 @@ MonoBehaviour:
     name: spark
     experience: 11
     level: 1
-    gold: 163
+    goldAmount: 163
 --- !u!195 &976833927
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -17963,7 +17964,7 @@ GameObject:
   - component: {fileID: 1362429335}
   - component: {fileID: 1362429334}
   m_Layer: 7
-  m_Name: Gold
+  m_Name: Gold Amount Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23176,7 +23177,7 @@ GameObject:
   - component: {fileID: 1791433442}
   - component: {fileID: 1791433441}
   m_Layer: 7
-  m_Name: HP Count
+  m_Name: HP Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24908,12 +24909,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c08f523a278056e48b247a9b3db3aa77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  figheterData:
-    maxHP: 20
+  cooldown: 0
+  fighterData:
+    maxHP: 0
+    currHP: 0
     maxMana: 0
-    maxStamina: 0
-    currHP: 20
     currMana: 0
+    maxStamina: 0
     currStamina: 0
     moveSpeed: 0
     attack: 10

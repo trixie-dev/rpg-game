@@ -3,59 +3,75 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public Text HPText, ManaText, levelText, XPText, goldText;
+    public Text HPText, ManaText, levelText, XPText, goldAmountText;
+    public RectTransform HPBar, ManaBar, XPBar;
 
-    public RectTransform HPBar;
-    public RectTransform ManaBar;
-    public RectTransform XPBar;
+    public struct StatusInfo
+    {
+        public Text innerText;
+        public int maxValue, currValue;
+        public RectTransform bar;
+    }
 
-    private Fighter fighter;
-    // Updateting HUD
+    private StatusInfo HPInfo;
+    private StatusInfo ManaInfo;
+
+    private Player player;
+
     public void Start()
     {
-        fighter = PlayerManager.instance.player;
+        player = PlayerManager.instance.player;
 
-        HPText.text = fighter.figheterData.currHP.ToString() + " / " + fighter.figheterData.maxHP.ToString();
-        ManaText.text = fighter.figheterData.currMana.ToString() + " / " + fighter.figheterData.maxMana.ToString();
-
-        levelText.text = PlayerManager.instance.player.playerData.level.ToString() + " lvl";
-        XPText.text = PlayerManager.instance.player.playerData.experience.ToString();
-        goldText.text = "G: " + PlayerManager.instance.player.playerData.gold.ToString();
-
-        HPBar.localScale = new Vector3((float)fighter.figheterData.currHP / (float)fighter.figheterData.maxHP, 1, 1);
-        ManaBar.localScale = new Vector3((float)fighter.figheterData.currMana / (float)fighter.figheterData.maxMana, 1, 1);
-        
-    }
-    public void UpdateHP()
-    {
-        
-        if (fighter.figheterData.currHP <= 0)
+        HPInfo = new StatusInfo
         {
-            HPText.text =  "0 / " + fighter.figheterData.maxHP.ToString();
-            HPBar.localScale = Vector3.zero;
+            innerText = HPText,
+            bar = HPBar
+        };
+        ManaInfo = new StatusInfo
+        {
+            innerText = ManaText,
+            bar = ManaBar
+        };
+
+    }
+    private void Update()
+    {
+        // Updating both HP and Mana variables
+        HPInfo.currValue = player.fighterData.currHP;
+        HPInfo.maxValue = player.fighterData.maxHP;
+
+        ManaInfo.currValue = player.fighterData.currMana;
+        ManaInfo.maxValue = player.fighterData.maxMana;
+
+        // Updating HP's interface
+        if (HPInfo.currValue <= 0)
+        {
+            HPInfo.innerText.text = "0 / " + HPInfo.maxValue.ToString();
+            HPInfo.bar.localScale = Vector3.zero;
         }
-            
         else
         {
-            HPText.text = fighter.figheterData.currHP.ToString() + " / " + fighter.figheterData.maxHP.ToString();
-            HPBar.localScale = new Vector3((float)fighter.figheterData.currHP / (float)fighter.figheterData.maxHP, 1, 1);
+            HPInfo.innerText.text = HPInfo.currValue.ToString() + " / " + HPInfo.maxValue.ToString();
+            HPInfo.bar.localScale = new Vector3((float)HPInfo.currValue / (float)HPInfo.maxValue, 1, 1);
         }
-            
-    }
 
-    public void UpdateMana(string x)
-    {
-        ManaText.text = x;
-        ManaBar.localScale = new Vector3((float)fighter.figheterData.currMana / (float)fighter.figheterData.maxMana, 1, 1);
+        // Updating Mana's interface
+        if (ManaInfo.currValue <= 0)
+        {
+            ManaInfo.innerText.text = "0 / " + ManaInfo.maxValue.ToString();
+            ManaInfo.bar.localScale = Vector3.zero;
+        }
+        else
+        {
+            ManaInfo.innerText.text = ManaInfo.currValue.ToString() + " / " + ManaInfo.maxValue.ToString();
+            ManaInfo.bar.localScale = new Vector3((float)ManaInfo.currValue / (float)ManaInfo.maxValue, 1, 1);
+        }
+
+        levelText.text = player.playerData.level.ToString() + " lvl";
+        XPText.text = player.playerData.experience.ToString();
+        goldAmountText.text = "G: " + player.playerData.goldAmount.ToString();
+
     }
-    public void UpdateXP(string x)
-    {
-        XPText.text = x;
-    }
-    public void UpdateGold(string x)
-    {
-        goldText.text = x;
-    }
-    // and other that not implemented
+    
 }
 

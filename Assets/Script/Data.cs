@@ -1,13 +1,15 @@
 using UnityEngine;
 
 [System.Serializable]
-public struct FigheterData
+public struct FighterData
 {
     public int maxHP;
-    public int maxMana;
-    public int maxStamina;
     public int currHP;
+
+    public int maxMana;
     public int currMana;
+
+    public int maxStamina;
     public int currStamina;
 
     public int moveSpeed;
@@ -23,13 +25,12 @@ public struct PlayerData
     public string name;
     public int experience;
     public int level;
-    public int gold;
+    public int goldAmount;
 }
 public struct Damage
 {
     public Vector3 origin;
     public int damageAmout;
     public float pushForce;
-
-
 }
+

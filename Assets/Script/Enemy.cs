@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : Mover
 {
-    private void Start()
-    {
-        
-    }
     private void OnCollisionEnter(Collision coll)
     {
         Debug.Log(coll.collider.tag);
@@ -16,11 +10,12 @@ public class Enemy : Mover
             Damage dmg = new Damage
             {
                 origin = transform.position,
-                damageAmout = figheterData.attack
+                damageAmout = fighterData.attack
                 // push force
             };
             coll.gameObject.SendMessage("ReceiveDamage", dmg);
         }
         
     }
+
 }
