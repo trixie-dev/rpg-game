@@ -2,7 +2,7 @@ using UnityEngine;
 public class Fighter : MonoBehaviour
 {
     public float cooldown;
-    protected float lastAttack;
+    protected float lastAttack = 0;
 
     // Immunity
     protected float immuneTime = 1.0f;

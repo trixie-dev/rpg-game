@@ -3,7 +3,6 @@ using UnityEngine;
 public class Mover : Fighter
 { 
     public CharacterController controller;
-    [SerializeField] private float speed = 6f;
     [SerializeField] float gravity = -9.81f;
 
     public Transform groundCheck;
@@ -13,7 +12,7 @@ public class Mover : Fighter
     Vector3 velocity;
     bool isGrounded;
 
-    protected virtual void Move(float horizontal, float vertical)
+    protected virtual void Move(float horizontal, float vertical, float speed)
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
