@@ -4,11 +4,15 @@ public class Player : Mover
 {
     public PlayerData playerData;
     private Animator animator;
+
     private int isWalkingHash;
     private int isRunningHash;
     private int swingHash;
-    private bool isAttaking = false;
- 
+    private string whichDirection;
+
+    private float horizontal;
+    private float vertical;
+
     public void Start()
     {
         animator = GetComponent<Animator>();
@@ -27,10 +31,11 @@ public class Player : Mover
     }
     void FixedUpdate()
     {
+        
         // Input
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+        
 
         bool isWalking = animator.GetBool(isWalkingHash);
         bool isRunning = animator.GetBool(isRunningHash);
@@ -64,74 +69,11 @@ public class Player : Mover
         {
             animator.SetBool(isRunningHash, false);
             animator.SetBool(isWalkingHash, false);
-        }
-        /*
-        if(horizontal==1 && vertical==0)
-        {
-            transform.localRotation = Quaternion.Euler(0, 90, 0);
-        }
-        else if(horizontal==-1 && vertical==0)
-        {
-            transform.localRotation = Quaternion.Euler(0, -90, 0);
-        }
-        else if(horizontal==0 && vertical==1)
-        {
-            transform.localRotation = Quaternion.Euler(0, 0, 0);
-        }
-        else if(horizontal==0 && vertical==-1)
-        {
-            transform.localRotation = Quaternion.Euler(0, 180, 0);
-        }
-        */
-       switch (horizontal, vertical)
-        {
-            case (1, 0):
-                float angel = Mathf.MoveTowardsAngle(transform.localRotation.eulerAngles.y, 90, Time.deltaTime * 100);
-                transform.localEulerAngles = new Vector3(0, angel, 0);
-                //Quaternion.Euler(0, 90, 0);
-                break;
-            case (-1, 0):
-                angel = Mathf.MoveTowardsAngle(transform.localRotation.eulerAngles.y, -90, Time.deltaTime * 100);
-                transform.localEulerAngles = new Vector3(0, angel, 0);
-                //transform.localRotation = Quaternion.Euler(0, -90, 0);
-                break;
-            case (0, 1):
-                angel = Mathf.MoveTowardsAngle(transform.localRotation.eulerAngles.y, 0, Time.deltaTime * 100);
-                transform.localEulerAngles = new Vector3(0, angel, 0);
-                //transform.localRotation = Quaternion.Euler(0, 0, 0);
-                break;
-            case (0, -1):
-                angel = Mathf.MoveTowardsAngle(transform.localRotation.eulerAngles.y, 180, Time.deltaTime * 100);
-                transform.localEulerAngles = new Vector3(0, angel, 0);
-                //transform.localRotation = Quaternion.Euler(0, 180, 0);
-                break;
-            case (1,1):
-                angel = Mathf.MoveTowardsAngle(transform.localRotation.eulerAngles.y, 45, Time.deltaTime * 100);
-                transform.localEulerAngles = new Vector3(0, angel, 0);
-                //transform.localRotation = Quaternion.Euler(0, 45, 0);
-                break;
-            case (-1,1):
-                angel = Mathf.MoveTowardsAngle(transform.localRotation.eulerAngles.y, -45, Time.deltaTime * 100);
-                transform.localEulerAngles = new Vector3(0, angel, 0);
-                //transform.localRotation = Quaternion.Euler(0, -45, 0);
-                break;
-            case (1,-1):
-                angel = Mathf.MoveTowardsAngle(transform.localRotation.eulerAngles.y, 135, Time.deltaTime * 100);
-                transform.localEulerAngles = new Vector3(0, angel, 0);
-                //transform.localRotation = Quaternion.Euler(0, 135, 0);
-                break;
-            case (-1,-1):
-                angel = Mathf.MoveTowardsAngle(transform.localRotation.eulerAngles.y, -135, Time.deltaTime * 100);
-                transform.localEulerAngles = new Vector3(0, angel, 0);
-                //transform.localRotation = Quaternion.Euler(0, -135, 0);
-                break;
-        
-            default :
-            
-                break;
-        }
-            
-        
+        }            
+    }
+    private void Update()
+    {
+        Rotation(horizontal, vertical);
     }
 
     
