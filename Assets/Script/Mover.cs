@@ -10,13 +10,15 @@ public class Mover : Fighter
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
+    public bool isGrounded;
+
     Vector3 velocity;
 
-    [SerializeField] private float rotationSpeed;
+    public float rotationSpeed;
 
     protected virtual void Update() {
         // Gravity 
-        bool isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
@@ -41,8 +43,7 @@ public class Mover : Fighter
         }
     }
 
-    protected virtual void Jump(){
-        bool isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+    protected virtual void Jump(float horizontal, float vertical){
         if(isGrounded){
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
         }

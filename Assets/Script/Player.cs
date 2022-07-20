@@ -3,6 +3,7 @@ using UnityEngine;
 public class Player : Mover
 {
     public PlayerData playerData;
+    private TargetDetect targetDetect;
     private Animator animator;
 
     private int isWalkingHash;
@@ -12,14 +13,15 @@ public class Player : Mover
 
     private float horizontal;
     private float vertical;
-
+    private bool isFocusedOnTarget;
     public void Start()
     {
         animator = GetComponent<Animator>();
+        targetDetect = GetComponent<TargetDetect>();
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
         
-
+        lastAttack -= cooldown;
         // TODO: implement player data for save/load system
         playerData = new PlayerData
         {
@@ -31,27 +33,37 @@ public class Player : Mover
     }
     void FixedUpdate()
     {
-        
         // Input
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        
 
+        if(!isGrounded){
+            horizontal/=2;
+            vertical/=2;
+        }
+
+
+            
         bool isWalking = animator.GetBool(isWalkingHash);
         bool isRunning = animator.GetBool(isRunningHash);
+
+        // Jump
         if(Input.GetButtonDown("Jump"))
-        {
-            Jump();
+        {   
+            Jump(horizontal, vertical);
+            animator.SetTrigger("Jump");
         }
         
+        // Swing
         if(Time.time - lastAttack > cooldown 
             && Input.GetMouseButtonDown(0))
         {
             animator.SetFloat("SwingSpeed", 1/cooldown);
-            lastAttack = Time.time;
             animator.SetTrigger("Swing");
+            lastAttack = Time.time;
         }
 
+        // Move
         if((horizontal != 0 || vertical != 0) 
             && Time.time - lastAttack > 5f*cooldown)
         
@@ -78,12 +90,36 @@ public class Player : Mover
     protected override void Update()
     {
         base.Update();
-        Rotation(horizontal, vertical);
 
+        if (Input.GetKeyDown(KeyCode.F) 
+            && targetDetect.SelectTarget() != null
+            && isFocusedOnTarget != true){
+                isFocusedOnTarget = true;
+                animator.SetBool("isFocused", true);
+            }
+            
+
+        else if(Input.GetKeyDown(KeyCode.F) 
+            || targetDetect.SelectTarget() == null){
+
+                isFocusedOnTarget = false;
+                animator.SetBool("isFocused", false);
+            }
+            
+            
+        // Rotation
+        if(!isFocusedOnTarget)
+        {
+            Rotation(horizontal, vertical);
+        }
+        else
+        {
+            Vector3 targetPosition = targetDetect.SelectTarget().transform.position;
+            Vector3 direction = targetPosition - transform.position;
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            float angel = Mathf.MoveTowardsAngle(transform.rotation.eulerAngles.y, lookRotation.eulerAngles.y, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(0f, angel, 0f);
+        }
+        
     }
-
-
-    
-    
-    
 }

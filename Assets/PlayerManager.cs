@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager instance;
+
     public HUD HUD;
 
     private void Awake()
@@ -23,6 +24,12 @@ public class PlayerManager : MonoBehaviour
 
     public Player player;
     // mb weaapon
+    
+    private void Start()
+    {
+        
+    }
+
     
 
     
