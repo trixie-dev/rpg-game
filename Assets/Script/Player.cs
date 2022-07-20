@@ -39,6 +39,10 @@ public class Player : Mover
 
         bool isWalking = animator.GetBool(isWalkingHash);
         bool isRunning = animator.GetBool(isRunningHash);
+        if(Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
         
         if(Time.time - lastAttack > cooldown 
             && Input.GetMouseButtonDown(0))
@@ -49,7 +53,7 @@ public class Player : Mover
         }
 
         if((horizontal != 0 || vertical != 0) 
-            && Time.time - lastAttack > 4f*cooldown)
+            && Time.time - lastAttack > 5f*cooldown)
         
         {  
             animator.SetBool(isWalkingHash, true);
@@ -71,10 +75,13 @@ public class Player : Mover
             animator.SetBool(isWalkingHash, false);
         }            
     }
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         Rotation(horizontal, vertical);
+
     }
+
 
     
     
