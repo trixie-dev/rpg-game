@@ -69,23 +69,38 @@ public class Player : Mover
         
         {  
             animator.SetBool(isWalkingHash, true);
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift)
+                && !isFocusedOnTarget)
             {
-                animator.SetBool(isRunningHash, true);
-                Move(horizontal, vertical, fighterData.moveSpeed * 2);
+                if(fighterData.currStamina > 1){
+                    Move(horizontal, vertical, fighterData.moveSpeed * 2);
+                    animator.SetBool(isRunningHash, true);
+                    ChangeStamina(-fighterData.runCost);
+                }
+                else
+                {
+                    Move(horizontal, vertical, fighterData.moveSpeed);
+                    animator.SetBool(isRunningHash, false);
+                }
+                    
+                
+                
 
             }
             else
             {
                 animator.SetBool(isRunningHash, false);
+                ChangeStamina(fighterData.runCost*2);
                 Move(horizontal, vertical, fighterData.moveSpeed);
             }
         }
         else
         {
+            ChangeStamina(fighterData.runCost*2);
             animator.SetBool(isRunningHash, false);
             animator.SetBool(isWalkingHash, false);
-        }            
+        }    
+              
     }
     protected override void Update()
     {
@@ -111,15 +126,21 @@ public class Player : Mover
         if(!isFocusedOnTarget)
         {
             Rotation(horizontal, vertical);
+            PlayerManager.instance.HUD.ResetFocusMark();
         }
         else
         {
+            
             Vector3 targetPosition = targetDetect.SelectTarget().transform.position;
+            PlayerManager.instance.HUD.SetFocusMark(targetPosition);
             Vector3 direction = targetPosition - transform.position;
+            
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             float angel = Mathf.MoveTowardsAngle(transform.rotation.eulerAngles.y, lookRotation.eulerAngles.y, rotationSpeed * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0f, angel, 0f);
         }
         
     }
+    
+    
 }

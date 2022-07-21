@@ -25,10 +25,7 @@ public class PlayerManager : MonoBehaviour
     public Player player;
     // mb weaapon
     
-    private void Start()
-    {
-        
-    }
+    
 
     
 

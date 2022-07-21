@@ -4,7 +4,11 @@ using UnityEngine.UI;
 public class HUD : MonoBehaviour
 {
     public Text HPText, ManaText, levelText, XPText, goldAmountText;
-    public RectTransform HPBar, ManaBar, XPBar;
+    public RectTransform HPBar, ManaBar, XPBar, StaminaBar;
+    public CanvasGroup staminaPanel;
+    public Image markPrefab;
+
+    public Camera cam;
 
     public struct StatusInfo
     {
@@ -15,6 +19,7 @@ public class HUD : MonoBehaviour
 
     private StatusInfo HPInfo;
     private StatusInfo ManaInfo;
+    private StatusInfo StaminaInfo;
 
     private Player player;
 
@@ -32,6 +37,10 @@ public class HUD : MonoBehaviour
             innerText = ManaText,
             bar = ManaBar
         };
+        StaminaInfo = new StatusInfo
+        {
+            bar = StaminaBar
+        };
 
     }
     private void Update()
@@ -42,6 +51,9 @@ public class HUD : MonoBehaviour
 
         ManaInfo.currValue = player.fighterData.currMana;
         ManaInfo.maxValue = player.fighterData.maxMana;
+
+        StaminaInfo.currValue = player.fighterData.currStamina;
+        StaminaInfo.maxValue = player.fighterData.maxStamina;
 
         // Updating HP's interface
         if (HPInfo.currValue <= 0)
@@ -66,6 +78,18 @@ public class HUD : MonoBehaviour
             ManaInfo.innerText.text = ManaInfo.currValue.ToString() + " / " + ManaInfo.maxValue.ToString();
             ManaInfo.bar.localScale = new Vector3((float)ManaInfo.currValue / (float)ManaInfo.maxValue, 1, 1);
         }
+        // Updating Stamina's interface
+        if (StaminaInfo.currValue <= 0)
+        {
+            StaminaInfo.bar.localScale = Vector3.zero;
+            staminaPanel.alpha = 1;
+        }
+        else
+        {
+            float scale = (float)StaminaInfo.currValue / (float)StaminaInfo.maxValue;
+            StaminaInfo.bar.localScale = new Vector3(1, scale, 1);
+            staminaPanel.alpha = 1 - scale;
+        }
 
         levelText.text = player.playerData.level.ToString() + " lvl";
         XPText.text = player.playerData.experience.ToString();
@@ -73,5 +97,16 @@ public class HUD : MonoBehaviour
 
     }
     
+    public void SetFocusMark(Vector3 target)
+    {
+        Vector3 screenPoint = cam.WorldToScreenPoint(target);
+        markPrefab.transform.position = screenPoint;
+        
+    }
+    
+    public void ResetFocusMark()
+    {
+        markPrefab.rectTransform.position = new Vector3(-3000, 0, 0);
+    }
 }
 

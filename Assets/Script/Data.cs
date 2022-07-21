@@ -11,6 +11,7 @@ public struct FighterData
 
     public int maxStamina;
     public int currStamina;
+    public int runCost;
 
     public int moveSpeed;
     public int attack;
