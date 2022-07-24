@@ -19,6 +19,8 @@ public struct FighterData
     public int intellect;
     public float physicalDefence; // float: 0-1 
     public float magicalDefence; // float: 0-1 
+
+    public float searchTargetRadius;
 }
 [System.Serializable]
 public struct PlayerData

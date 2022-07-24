@@ -3,17 +3,23 @@ using UnityEngine;
 public class Player : Mover
 {
     public PlayerData playerData;
-    private TargetDetect targetDetect;
+
     private Animator animator;
+
+    public Collider[] targets;
 
     private int isWalkingHash;
     private int isRunningHash;
-    private int swingHash;
-    private string whichDirection;
+
 
     private float horizontal;
     private float vertical;
     private bool isFocusedOnTarget;
+    private bool isAttacking;
+    private float attackDuration = 3.43f;
+
+
+
     public void Start()
     {
         animator = GetComponent<Animator>();
@@ -21,7 +27,7 @@ public class Player : Mover
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
         
-        lastAttack -= cooldown;
+
         // TODO: implement player data for save/load system
         playerData = new PlayerData
         {
@@ -29,7 +35,6 @@ public class Player : Mover
             level = 2,
             goldAmount = 163
         };
-
     }
     void FixedUpdate()
     {
@@ -42,8 +47,6 @@ public class Player : Mover
             vertical/=2;
         }
 
-
-            
         bool isWalking = animator.GetBool(isWalkingHash);
         bool isRunning = animator.GetBool(isRunningHash);
 
@@ -65,8 +68,7 @@ public class Player : Mover
 
         // Move
         if((horizontal != 0 || vertical != 0) 
-            && Time.time - lastAttack > 5f*cooldown)
-        
+            && Time.time - lastAttack > attackDuration * cooldown)
         {  
             animator.SetBool(isWalkingHash, true);
             if (Input.GetKey(KeyCode.LeftShift)
@@ -82,10 +84,6 @@ public class Player : Mover
                     Move(horizontal, vertical, fighterData.moveSpeed);
                     animator.SetBool(isRunningHash, false);
                 }
-                    
-                
-                
-
             }
             else
             {
@@ -94,6 +92,7 @@ public class Player : Mover
                 Move(horizontal, vertical, fighterData.moveSpeed);
             }
         }
+
         else
         {
             ChangeStamina(fighterData.runCost*2);
@@ -105,22 +104,23 @@ public class Player : Mover
     protected override void Update()
     {
         base.Update();
+        // Search enemy in range
+        print(targetDetect.SelectTarget(fighterData.searchTargetRadius));
 
+        // Set Target
         if (Input.GetKeyDown(KeyCode.F) 
-            && targetDetect.SelectTarget() != null
+            && targetDetect.SelectTarget(fighterData.searchTargetRadius) != null
             && isFocusedOnTarget != true){
                 isFocusedOnTarget = true;
                 animator.SetBool("isFocused", true);
             }
-            
 
         else if(Input.GetKeyDown(KeyCode.F) 
-            || targetDetect.SelectTarget() == null){
+            || targetDetect.SelectTarget(fighterData.searchTargetRadius) == null){
 
                 isFocusedOnTarget = false;
                 animator.SetBool("isFocused", false);
-            }
-            
+            } 
             
         // Rotation
         if(!isFocusedOnTarget)
@@ -130,8 +130,7 @@ public class Player : Mover
         }
         else
         {
-            
-            Vector3 targetPosition = targetDetect.SelectTarget().transform.position;
+            Vector3 targetPosition = targetDetect.SelectTarget(fighterData.searchTargetRadius).transform.position;
             PlayerManager.instance.HUD.SetFocusMark(targetPosition);
             Vector3 direction = targetPosition - transform.position;
             
@@ -140,7 +139,5 @@ public class Player : Mover
             transform.rotation = Quaternion.Euler(0f, angel, 0f);
         }
         
-    }
-    
-    
+    } 
 }

@@ -16,7 +16,8 @@ public class Mover : Fighter
 
     public float rotationSpeed;
 
-    protected virtual void Update() {
+    protected override void Update() {
+        base.Update();
         // Gravity 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         

@@ -7,6 +7,8 @@ public class HUD : MonoBehaviour
     public RectTransform HPBar, ManaBar, XPBar, StaminaBar;
     public CanvasGroup staminaPanel;
     public Image markPrefab;
+    public Image enemyHp;
+    [SerializeField] private Vector3 offsetEnemyHpBar;
 
     public Camera cam;
 
@@ -107,6 +109,17 @@ public class HUD : MonoBehaviour
     public void ResetFocusMark()
     {
         markPrefab.rectTransform.position = new Vector3(-3000, 0, 0);
+    }
+
+    public void SetEnemyHP(){
+        Collider[] targets = player.targets;
+        if(targets.Length == 0){
+            return;
+        }/*
+        foreach (Collider obj in targets){
+            
+        }*/
+
     }
 }
 

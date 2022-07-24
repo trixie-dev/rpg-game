@@ -1,12 +1,19 @@
+using System.Linq;
 using UnityEngine;
 
 public class TargetDetect : MonoBehaviour {
-    [SerializeField] private float reachRadius = 5f;
     public LayerMask fighter;
+    public GameObject fighterObject;
 
-    public Collider SelectTarget(){
+    public Collider[] SearchTargets(float radius){
+        Collider[] objects = Physics.OverlapSphere(transform.position, radius, fighter);
+        // remove self from list
+        objects = objects.Where(x => x.gameObject != fighterObject).ToArray();
+        return objects;
+    }
+    public Collider SelectTarget(float radius){
         
-        Collider[] objects = Physics.OverlapSphere(transform.position, reachRadius, fighter);
+        Collider[] objects = SearchTargets(radius);
         if (objects.Length == 0)
         {
             return null;
@@ -14,9 +21,7 @@ public class TargetDetect : MonoBehaviour {
         Collider nearestTarget = objects[0];
 
         foreach(Collider obj in objects){
-            print(obj.name);
-            if(Vector3.Distance(transform.position, obj.transform.position) > 0
-                && Vector3.Distance(transform.position, obj.transform.position) 
+            if(Vector3.Distance(transform.position, obj.transform.position) 
                 < Vector3.Distance(transform.position, nearestTarget.transform.position)){
                 nearestTarget = obj;
             }
@@ -24,10 +29,15 @@ public class TargetDetect : MonoBehaviour {
         
         return nearestTarget;
     }
-    public void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, reachRadius);
+
+    public bool IsTargetInRange(float radius){
+        Collider[] objects = SearchTargets(radius);
+        if (objects.Length == 0)
+        {
+            return false;
+        }
+        return true;
     }
+    
 
 }
