@@ -12,13 +12,13 @@ public class CameraPosition : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R)){
-            if (cameraPosition == false)
+            if (!cameraPosition)
             {
                 transform.localRotation = Quaternion.Euler(50, 90, 0);
                 offset = new Vector3 (-20, 25, 0);
                 cameraPosition = true;
             }
-            else if (cameraPosition == true)
+            else if (cameraPosition)
             {
                 transform.localRotation = Quaternion.Euler(50, 0, 0);
                 offset = new Vector3(0, 25, -20);
