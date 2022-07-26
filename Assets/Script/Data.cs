@@ -30,10 +30,25 @@ public struct PlayerData
     public int level;
     public int goldAmount;
 }
+
+[System.Serializable]
+public struct WeaponData
+{
+    public string name;
+    public int level;
+    public int attack;
+    public float range;
+    public float weight;
+    public int price;
+    public float pushForce;
+    public float staminaCost;
+}
+
 public struct Damage
 {
     public Vector3 origin;
     public int damageAmout;
     public float pushForce;
+    public string damageType;
 }
 

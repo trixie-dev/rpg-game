@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class CharacterManager : MonoBehaviour
 {
-    public static PlayerManager instance;
+    public static CharacterManager instance;
 
     public HUD HUD;
 
     private void Awake()
     {
-        if (PlayerManager.instance != null)
+        if (CharacterManager.instance != null)
         {
             Destroy(gameObject);
             return;
@@ -23,7 +23,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     public Player player;
-    // mb weaapon
+    public Weapon weapon;
     
     
 

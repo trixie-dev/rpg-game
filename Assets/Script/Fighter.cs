@@ -3,6 +3,7 @@ using UnityEngine;
 public class Fighter : MonoBehaviour
 {
     protected TargetDetect targetDetect;
+    
     [SerializeField] private LineOfHP lineHP;
     public float cooldown;
     protected float lastAttack = 0;
@@ -25,10 +26,11 @@ public class Fighter : MonoBehaviour
         if (fighterData.currHP <= 0)
         {
             fighterData.currHP = 0;
-            //Death();
+            Death();
         }
 
     }
+    
     protected virtual void Update(){
         if(gameObject.tag == "Player")
             return;

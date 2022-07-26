@@ -5,6 +5,7 @@ public class Player : Mover
     public PlayerData playerData;
 
     private Animator animator;
+    private Weapon weapon;
 
     public Collider[] targets;
 
@@ -26,6 +27,7 @@ public class Player : Mover
         targetDetect = GetComponent<TargetDetect>();
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
+        weapon = CharacterManager.instance.weapon;
         
 
         // TODO: implement player data for save/load system
@@ -63,6 +65,7 @@ public class Player : Mover
         {
             animator.SetFloat("SwingSpeed", 1/cooldown);
             animator.SetTrigger("Swing");
+            Invoke("Attack", 1);
             lastAttack = Time.time;
         }
 
@@ -104,8 +107,6 @@ public class Player : Mover
     protected override void Update()
     {
         base.Update();
-        // Search enemy in range
-        print(targetDetect.SelectTarget(fighterData.searchTargetRadius));
 
         // Set Target
         if (Input.GetKeyDown(KeyCode.F) 
@@ -126,12 +127,12 @@ public class Player : Mover
         if(!isFocusedOnTarget)
         {
             Rotation(horizontal, vertical);
-            PlayerManager.instance.HUD.ResetFocusMark();
+            CharacterManager.instance.HUD.ResetFocusMark();
         }
         else
         {
             Vector3 targetPosition = targetDetect.SelectTarget(fighterData.searchTargetRadius).transform.position;
-            PlayerManager.instance.HUD.SetFocusMark(targetPosition);
+            CharacterManager.instance.HUD.SetFocusMark(targetPosition);
             Vector3 direction = targetPosition - transform.position;
             
             Quaternion lookRotation = Quaternion.LookRotation(direction);
@@ -140,4 +141,9 @@ public class Player : Mover
         }
         
     } 
+
+    private void Attack(){
+        weapon.Attack();
+    }
+
 }

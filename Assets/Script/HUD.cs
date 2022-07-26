@@ -27,7 +27,7 @@ public class HUD : MonoBehaviour
 
     public void Start()
     {
-        player = PlayerManager.instance.player;
+        player = CharacterManager.instance.player;
 
         HPInfo = new StatusInfo
         {
@@ -111,15 +111,6 @@ public class HUD : MonoBehaviour
         markPrefab.rectTransform.position = new Vector3(-3000, 0, 0);
     }
 
-    public void SetEnemyHP(){
-        Collider[] targets = player.targets;
-        if(targets.Length == 0){
-            return;
-        }/*
-        foreach (Collider obj in targets){
-            
-        }*/
 
-    }
 }
 

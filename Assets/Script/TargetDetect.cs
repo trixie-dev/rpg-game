@@ -2,11 +2,11 @@ using System.Linq;
 using UnityEngine;
 
 public class TargetDetect : MonoBehaviour {
-    public LayerMask fighter;
+    public LayerMask fighterLayer;
     public GameObject fighterObject;
 
     public Collider[] SearchTargets(float radius){
-        Collider[] objects = Physics.OverlapSphere(transform.position, radius, fighter);
+        Collider[] objects = Physics.OverlapSphere(transform.position, radius, fighterLayer);
         // remove self from list
         objects = objects.Where(x => x.gameObject != fighterObject).ToArray();
         return objects;
