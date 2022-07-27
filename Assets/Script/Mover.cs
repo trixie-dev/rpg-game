@@ -51,9 +51,12 @@ public class Mover : Fighter
         }
     }
     public void ChangeStamina(int count){
-        if(fighterData.currStamina <= fighterData.maxStamina)
+        if(count > 0 && fighterData.currStamina < fighterData.maxStamina)
             fighterData.currStamina += count;
-        else if(fighterData.currStamina < 0)
+        else if(count < 0 && fighterData.currStamina <= fighterData.maxStamina)
+            fighterData.currStamina += count;
+            
+        if(fighterData.currStamina < 0)
             fighterData.currStamina = 0;
         else if(fighterData.currStamina > fighterData.maxStamina)
             fighterData.currStamina = fighterData.maxStamina;
