@@ -12,6 +12,7 @@ public struct FighterData
     public int maxStamina;
     public int currStamina;
     public int runCost;
+    public int staminaRegen;
 
     public int moveSpeed;
     public int attack;
@@ -41,7 +42,7 @@ public struct WeaponData
     public float weight;
     public int price;
     public float pushForce;
-    public float staminaCost;
+    public int staminaCost;
 }
 
 public struct Damage

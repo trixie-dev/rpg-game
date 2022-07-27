@@ -17,6 +17,7 @@ public class Player : Mover
     private float vertical;
     private bool isFocusedOnTarget;
     private bool isAttacking;
+    private bool isRunning;
     private float attackDuration = 3.43f;
 
 
@@ -60,18 +61,20 @@ public class Player : Mover
         }
         
         // Swing
-        if(Time.time - lastAttack > cooldown 
-            && Input.GetMouseButtonDown(0))
+        if(Time.time - lastAttack > cooldown
+            && Input.GetMouseButtonDown(0)
+            && fighterData.currStamina >= weapon.weaponData.staminaCost)
         {
-            animator.SetFloat("SwingSpeed", 1/cooldown);
+            animator.SetFloat("SwingSpeed", attackDuration/cooldown);
             animator.SetTrigger("Swing");
-            Invoke("Attack", 1);
+            Invoke("Attack", cooldown/2);
+            ChangeStamina(-weapon.weaponData.staminaCost);
             lastAttack = Time.time;
         }
 
         // Move
         if((horizontal != 0 || vertical != 0) 
-            && Time.time - lastAttack > attackDuration * cooldown)
+            && Time.time - lastAttack > cooldown)
         {  
             animator.SetBool(isWalkingHash, true);
             if (Input.GetKey(KeyCode.LeftShift)
@@ -81,6 +84,7 @@ public class Player : Mover
                     Move(horizontal, vertical, fighterData.moveSpeed * 2);
                     animator.SetBool(isRunningHash, true);
                     ChangeStamina(-fighterData.runCost);
+                    isRunning = true;
                 }
                 else
                 {
@@ -90,18 +94,22 @@ public class Player : Mover
             }
             else
             {
+                isRunning = false;
                 animator.SetBool(isRunningHash, false);
-                ChangeStamina(fighterData.runCost*2);
+                //ChangeStamina(fighterData.runCost*2);
                 Move(horizontal, vertical, fighterData.moveSpeed);
             }
         }
 
         else
         {
-            ChangeStamina(fighterData.runCost*2);
             animator.SetBool(isRunningHash, false);
             animator.SetBool(isWalkingHash, false);
-        }    
+        }  
+        if (Time.time - lastAttack > 2*cooldown
+            && !isRunning) {
+            ChangeStamina(fighterData.staminaRegen);
+        }
               
     }
     protected override void Update()
