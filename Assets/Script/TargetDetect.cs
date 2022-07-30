@@ -9,6 +9,9 @@ public class TargetDetect : MonoBehaviour {
         Collider[] objects = Physics.OverlapSphere(transform.position, radius, fighterLayer);
         // remove self from list
         objects = objects.Where(x => x.gameObject != fighterObject).ToArray();
+        if(gameObject.tag == "Mob"){
+            objects = objects.Where(x => x.gameObject.tag != "Mob").ToArray();
+        }
         return objects;
     }
     public Collider SelectTarget(float radius){

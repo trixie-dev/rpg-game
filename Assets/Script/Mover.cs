@@ -16,8 +16,8 @@ public class Mover : Fighter
 
     public float rotationSpeed;
 
-    protected override void Update() {
-        base.Update();
+    protected virtual void Update() {
+        
         // Gravity 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         
@@ -28,13 +28,15 @@ public class Mover : Fighter
         controller.Move(velocity * Time.deltaTime);
     }
     
-    protected virtual void Move(float horizontal, float vertical, float speed)
+    protected virtual void Move(Vector3 input, float speed)
     {   
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        Vector3 direction = new Vector3(input.x, input.y, input.z).normalized;
         controller.Move(direction * speed * Time.deltaTime);        
     }
-    protected virtual void Rotation(float horizontal, float vertical)
+    protected virtual void Rotation(Vector3 input)
     {
+        float horizontal = input.x;
+        float vertical = input.z;
         if (horizontal != 0 || vertical != 0)
         {
             Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;

@@ -19,7 +19,7 @@ public class Weapon : TargetDetect{
             Damage dmg = new Damage
             {
                 origin = transform.position,
-                damageAmout = (weaponData.attack + fighter.fighterData.attack)/2,
+                damageAmout = weaponData.attack + fighter.fighterData.attack,
                 damageType = "physical"
                 // push force
             };

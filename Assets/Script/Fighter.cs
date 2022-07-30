@@ -31,18 +31,7 @@ public class Fighter : MonoBehaviour
 
     }
     
-    protected virtual void Update(){
-        if(gameObject.tag == "Player")
-            return;
-        if (targetDetect.IsTargetInRange(fighterData.searchTargetRadius))
-        {
-            lineHP.DisplayHP();
-        }
-        else
-        {
-            lineHP.HideHP();
-        }
-    }
+    
     
 
     

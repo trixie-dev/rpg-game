@@ -70,7 +70,7 @@ public class Player : Mover
         base.Update();
 
         // Set Target
-        if (Input.GetKeyDown(KeyCode.F) 
+        if ((Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.JoystickButton11))
             && targetDetect.SelectTarget(fighterData.searchTargetRadius) != null
             && isFocusedOnTarget != true){
                 isFocusedOnTarget = true;
@@ -78,6 +78,7 @@ public class Player : Mover
             }
 
         else if(Input.GetKeyDown(KeyCode.F) 
+            || Input.GetKeyDown(KeyCode.JoystickButton11)
             || targetDetect.SelectTarget(fighterData.searchTargetRadius) == null){
 
                 isFocusedOnTarget = false;
@@ -87,7 +88,7 @@ public class Player : Mover
         // Rotation
         if(!isFocusedOnTarget)
         {
-            Rotation(horizontal, vertical);
+            Rotation(new Vector3(horizontal, 0, vertical));
             CharacterManager.instance.HUD.ResetFocusMark();
         }
         else
@@ -108,7 +109,7 @@ public class Player : Mover
     }
 
     private void PlayerJump(){
-        if(Input.GetButtonDown("Jump"))
+        if(Input.GetButtonDown("Jump")  || Input.GetKeyDown(KeyCode.JoystickButton1))
         {   
             Jump(horizontal, vertical);
             animator.SetTrigger("Jump");
@@ -116,7 +117,7 @@ public class Player : Mover
     }
     private void PlayerAttack(){
         if(Time.time - lastAttack > cooldown
-            && Input.GetMouseButtonDown(0)
+            && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton5))
             && fighterData.currStamina >= weapon.weaponData.staminaCost)
         {
             animator.SetFloat("SwingSpeed", attackDuration/cooldown);
@@ -132,18 +133,18 @@ public class Player : Mover
             && Time.time - lastAttack > cooldown)
         {  
             animator.SetBool(isWalkingHash, true);
-            if (Input.GetKey(KeyCode.LeftShift)
+            if ((Input.GetKey(KeyCode.LeftShift)  || Input.GetKeyDown(KeyCode.JoystickButton2))
                 && !isFocusedOnTarget)
             {
                 if(fighterData.currStamina > 1){
-                    Move(horizontal, vertical, fighterData.moveSpeed * 2);
+                    Move(new Vector3(horizontal, 0, vertical), fighterData.moveSpeed * 2);
                     animator.SetBool(isRunningHash, true);
                     ChangeStamina(-fighterData.runCost);
                     isRunning = true;
                 }
                 else
                 {
-                    Move(horizontal, vertical, fighterData.moveSpeed);
+                    Move(new Vector3(horizontal, 0, vertical), fighterData.moveSpeed);
                     animator.SetBool(isRunningHash, false);
                 }
             }
@@ -152,7 +153,7 @@ public class Player : Mover
                 isRunning = false;
                 animator.SetBool(isRunningHash, false);
                 //ChangeStamina(fighterData.runCost*2);
-                Move(horizontal, vertical, fighterData.moveSpeed);
+                Move(new Vector3(horizontal, 0, vertical), fighterData.moveSpeed);
             }
         }
 
