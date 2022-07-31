@@ -4,6 +4,7 @@ public class Enemy : Mover
 {
     public int chasingRange = 10;
     public Weapon weapon;
+    public int exp;
     private Animator anim;
     bool isChasing;
     Vector3 startPosition;
@@ -52,6 +53,12 @@ public class Enemy : Mover
     protected override void Death()
     {
         dead = true;
+        Collider[] objects = targetDetect.SearchTargets(5);
+        foreach(Collider c in objects){
+            if(c.GetComponent<Player>() != null){
+                c.GetComponent<Player>().AddExp(exp);
+            }
+        }
         anim.SetTrigger("Death");
         Invoke("DestroyObject", 3);
     }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 
 public class Player : Mover
 {
@@ -35,8 +36,10 @@ public class Player : Mover
         playerData = new PlayerData
         {
             name = "spark",
-            level = 2,
-            goldAmount = 163
+            level = 1,
+            goldAmount = 163,
+            levelTable = new int[] { 100, 200, 300, 500, 700, 1000, 1500, 2000, 3000, 5000},
+
         };
     }
     void FixedUpdate()
@@ -68,7 +71,6 @@ public class Player : Mover
     protected override void Update()
     {
         base.Update();
-
         // Set Target
         if ((Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.JoystickButton11))
             && targetDetect.SelectTarget(fighterData.searchTargetRadius) != null
@@ -169,5 +171,38 @@ public class Player : Mover
             && !isRunning) {
             ChangeStamina(fighterData.staminaRegen);
         }
+    }
+    public void AddExp(int xp)
+    {
+        playerData.experience += xp;
+        playerData.level = GetCurrentLevel();
+    }
+
+    public int GetCurrentLevel(){
+
+        int r = 0;
+        int add = 0;
+
+        while (playerData.experience >= add)
+        {
+            add += playerData.levelTable[r];
+            r++;
+            if(r == playerData.levelTable.Length)
+            {
+                return r;
+            }
+        }
+        return r;
+    }
+
+    public int GetXpToLevel(int level){
+        int r = 0;
+        int xp = 0;
+
+        while (r < level){
+            xp += playerData.levelTable[r];
+            r++;
+        }
+        return xp;
     }
 }

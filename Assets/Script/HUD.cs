@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public Text HPText, ManaText, levelText, XPText, goldAmountText;
+    public Text HPText, ManaText, levelText, goldAmountText;
     public RectTransform HPBar, ManaBar, XPBar, StaminaBar;
     public CanvasGroup staminaPanel;
     public Image markPrefab;
@@ -22,6 +22,7 @@ public class HUD : MonoBehaviour
     private StatusInfo HPInfo;
     private StatusInfo ManaInfo;
     private StatusInfo StaminaInfo;
+    private StatusInfo XPInfo;
 
     private Player player;
 
@@ -42,6 +43,10 @@ public class HUD : MonoBehaviour
         StaminaInfo = new StatusInfo
         {
             bar = StaminaBar
+        };
+        XPInfo = new StatusInfo
+        {
+            bar = XPBar
         };
 
     }
@@ -93,8 +98,23 @@ public class HUD : MonoBehaviour
             staminaPanel.alpha = 1 - scale;
         }
 
-        levelText.text = player.playerData.level.ToString() + " lvl";
-        XPText.text = player.playerData.experience.ToString();
+        int currLevel = player.playerData.level;
+        levelText.text = currLevel.ToString() + " lvl";
+        if(currLevel == player.playerData.levelTable.Length)
+        {
+            XPInfo.bar.localScale = Vector3.one;
+        }
+        else{
+            int prevLevelXp = player.GetXpToLevel(currLevel - 1);
+            int currLevelXp = player.GetXpToLevel(currLevel);
+
+            int diff = currLevelXp - prevLevelXp;
+            int currXp = player.playerData.experience - prevLevelXp;
+            float scale = (float)currXp / (float)diff;
+            XPInfo.bar.localScale = new Vector3(scale, 1, 1);
+
+        }
+        
         goldAmountText.text = "G: " + player.playerData.goldAmount.ToString();
 
     }

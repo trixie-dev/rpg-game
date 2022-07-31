@@ -30,6 +30,7 @@ public struct PlayerData
     public int experience;
     public int level;
     public int goldAmount;
+    public int[] levelTable;
 }
 
 [System.Serializable]
@@ -52,4 +53,5 @@ public struct Damage
     public float pushForce;
     public string damageType;
 }
+
 
