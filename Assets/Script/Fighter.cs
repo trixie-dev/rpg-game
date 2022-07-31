@@ -9,13 +9,13 @@ public class Fighter : MonoBehaviour
     protected float lastAttack = 0;
 
     // Immunity
-    protected float immuneTime = 1.0f;
-    protected float lastImmune;
+    protected float impactTime = 1.5f;
+    protected float lastImpact;
     public FighterData fighterData;
 
     private void Start() {
         targetDetect = GetComponent<TargetDetect>();
-        lastImmune = -cooldown;
+        lastImpact = -impactTime;
         
     }
     protected virtual void ReceiveDamage(Damage dmg)

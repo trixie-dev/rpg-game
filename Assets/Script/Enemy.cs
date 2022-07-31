@@ -10,6 +10,8 @@ public class Enemy : Mover
     Vector3 startPosition;
     Collider target;
     bool dead;
+    private bool getImpact;
+
     private void Start() {
         startPosition = transform.position;
         targetDetect = GetComponent<TargetDetect>();
@@ -32,7 +34,8 @@ public class Enemy : Mover
             Move(target.transform.position - transform.position, fighterData.moveSpeed);
             Rotation((target.transform.position - transform.position).normalized);
             if(Vector3.Distance(target.transform.position, transform.position) <= weapon.weaponData.range + 0.5f
-                && Time.time - lastAttack > cooldown){
+                && Time.time - lastAttack > cooldown
+                && Time.time - lastImpact > impactTime){
                 
                 lastAttack = Time.time;
                 Invoke("Attack", cooldown/2);
@@ -48,6 +51,8 @@ public class Enemy : Mover
     protected override void ReceiveDamage(Damage dmg)
     {
         base.ReceiveDamage(dmg);
+        lastImpact = Time.time;
+        getImpact = true;
         anim.SetTrigger("GetDamage");
     }
     protected override void Death()
@@ -66,6 +71,10 @@ public class Enemy : Mover
         Destroy(gameObject);
     }
     private void Attack(){
+        if(getImpact){
+            getImpact = false;
+            return;
+        }
         weapon.Attack();
     }
 
