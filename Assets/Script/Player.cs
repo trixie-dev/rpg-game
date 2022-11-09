@@ -113,7 +113,7 @@ public class Player : Mover
     private void PlayerJump(){
         if(Input.GetButtonDown("Jump")  || Input.GetKeyDown(KeyCode.JoystickButton1))
         {   
-            Jump(horizontal, vertical);
+            Jump();
             animator.SetTrigger("Jump");
         }
     }

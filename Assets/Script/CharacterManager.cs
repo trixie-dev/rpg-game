@@ -10,6 +10,7 @@ public class CharacterManager : MonoBehaviour
 
     private void Awake()
     {
+        Cursor.visible = false;
         if (CharacterManager.instance != null)
         {
             Destroy(gameObject);

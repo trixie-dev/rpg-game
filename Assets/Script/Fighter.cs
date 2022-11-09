@@ -11,6 +11,8 @@ public class Fighter : MonoBehaviour
     // Immunity
     protected float impactTime = 1.5f;
     protected float lastImpact;
+    protected float jumpCD = 1f;
+    protected float lastJump = -0.5f;
     public FighterData fighterData;
 
     private void Start() {
