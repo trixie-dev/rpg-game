@@ -13866,7 +13866,9 @@ MonoBehaviour:
     currStamina: 1000
     runCost: 1
     staminaRegen: 2
+    baseMoveSpeed: 6
     moveSpeed: 6
+    moveSpeedFocused: 3
     attack: 10
     agility: 10
     intellect: 10

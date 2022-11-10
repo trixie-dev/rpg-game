@@ -14,7 +14,9 @@ public struct FighterData
     public int runCost;
     public int staminaRegen;
 
+    public int baseMoveSpeed;
     public int moveSpeed;
+    public int moveSpeedFocused;
     public int attack;
     public int agility;
     public int intellect;

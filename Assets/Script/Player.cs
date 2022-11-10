@@ -76,13 +76,14 @@ public class Player : Mover
             && targetDetect.SelectTarget(fighterData.searchTargetRadius) != null
             && isFocusedOnTarget != true){
                 isFocusedOnTarget = true;
+                fighterData.moveSpeed = fighterData.moveSpeedFocused;
                 animator.SetBool("isFocused", true);
             }
 
-        else if(Input.GetKeyDown(KeyCode.F) 
+        else if(Input.GetKeyDown(KeyCode.F)
             || Input.GetKeyDown(KeyCode.JoystickButton11)
             || targetDetect.SelectTarget(fighterData.searchTargetRadius) == null){
-
+                fighterData.moveSpeed = fighterData.baseMoveSpeed;
                 isFocusedOnTarget = false;
                 animator.SetBool("isFocused", false);
             } 
