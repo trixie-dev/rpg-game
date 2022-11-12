@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Linq;
-
+//229EFA
 public class Player : Mover
 {
     public PlayerData playerData;
@@ -20,6 +20,7 @@ public class Player : Mover
     private bool isAttacking;
     private bool isRunning;
     private float attackDuration = 3.43f;
+    
 
 
 
@@ -49,9 +50,11 @@ public class Player : Mover
         vertical = Input.GetAxis("Vertical");
 
         if(!isGrounded){
-            horizontal/=2;
-            vertical/=2;
+            horizontal/=4;
+            vertical/=4;
+            
         }
+        
 
         bool isWalking = animator.GetBool(isWalkingHash);
         bool isRunning = animator.GetBool(isRunningHash);
@@ -59,8 +62,7 @@ public class Player : Mover
         // Jump
         PlayerJump();
         
-        // Swing
-        PlayerAttack();
+        
 
         // Move
         PlayerMovement(); 
@@ -71,6 +73,8 @@ public class Player : Mover
     protected override void Update()
     {
         base.Update();
+        // Swing
+        PlayerAttack();
         // Set Target
         if ((Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.JoystickButton11))
             && targetDetect.SelectTarget(fighterData.searchTargetRadius) != null
@@ -112,10 +116,14 @@ public class Player : Mover
     }
 
     private void PlayerJump(){
-        if(Input.GetButtonDown("Jump")  || Input.GetKeyDown(KeyCode.JoystickButton1))
-        {   
+        if(Input.GetButtonDown("Jump") && isGrounded && fighterData.currStamina > 60)
+        {
+            
             Jump();
             animator.SetTrigger("Jump");
+            
+
+            
         }
     }
     private void PlayerAttack(){

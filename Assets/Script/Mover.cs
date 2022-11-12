@@ -47,10 +47,10 @@ public class Mover : Fighter
     }
 
     protected virtual void Jump(){
-        if(isGrounded && fighterData.currStamina > 61){
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-            ChangeStamina(-60);
-        }
+        
+        velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+        ChangeStamina(-60);
+        
     }
     public void ChangeStamina(int count){
         if(count > 0 && fighterData.currStamina < fighterData.maxStamina)
