@@ -5,12 +5,14 @@ public class Enemy : Mover
     public int chasingRange = 10;
     public Weapon weapon;
     public int exp;
+    public int gold;
     private Animator anim;
     bool isChasing;
     Vector3 startPosition;
     Collider target;
     bool dead;
     private bool getImpact;
+    public GameObject canvas;
 
     private void Start() {
         startPosition = transform.position;
@@ -62,10 +64,13 @@ public class Enemy : Mover
         foreach(Collider c in objects){
             if(c.GetComponent<Player>() != null){
                 c.GetComponent<Player>().AddExp(exp);
+                c.GetComponent<Player>().AddGold(gold);
             }
         }
         anim.SetTrigger("Death");
+        Destroy(canvas);
         Invoke("DestroyObject", 3);
+        
     }
     private void DestroyObject(){
         Destroy(gameObject);

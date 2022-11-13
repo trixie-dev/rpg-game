@@ -7,6 +7,8 @@ public class LineOfHP : MonoBehaviour {
     private Fighter fighterScript;
     private TargetDetect targetDetect;
     public RectTransform HPBar;
+    public Text hpText;
+    
     private CanvasGroup canvasGroup;
     [SerializeField] private Vector3 offsetHPLine;
     private void Start() {
@@ -16,9 +18,12 @@ public class LineOfHP : MonoBehaviour {
         canvasGroup.alpha = 0;
         fighterScript = fighter.GetComponent<Fighter>();
         targetDetect = fighter.GetComponent<TargetDetect>();
+        
     }
 
-    private void Update(){
+    private void Update()
+    {
+        hpText.text = fighterScript.fighterData.currHP.ToString();
         transform.position = Camera.main.WorldToScreenPoint(fighter.transform.position) + offsetHPLine;
         HPBar.localScale = new Vector3((float)fighterScript.fighterData.currHP / (float)fighterScript.fighterData.maxHP, 1, 1);
         if(gameObject.tag == "Player")

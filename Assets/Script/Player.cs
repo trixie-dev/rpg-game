@@ -186,6 +186,10 @@ public class Player : Mover
         playerData.experience += xp;
         playerData.level = GetCurrentLevel();
     }
+    public void AddGold(int gold)
+    {
+        playerData.goldAmount += gold;
+    }
 
     public int GetCurrentLevel(){
 
