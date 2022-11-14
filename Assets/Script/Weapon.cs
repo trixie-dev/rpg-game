@@ -18,10 +18,10 @@ public class Weapon : TargetDetect{
             
             Damage dmg = new Damage
             {
-                origin = transform.position,
+                origin = fighter.transform.position,
                 damageAmout = weaponData.attack + fighter.fighterData.attack,
-                damageType = "physical"
-                // push force
+                damageType = "physical",
+                pushForce = weaponData.pushForce
             };
             coll.gameObject.SendMessage("ReceiveDamage", dmg);
             

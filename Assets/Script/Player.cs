@@ -1,3 +1,4 @@
+using System.Globalization;
 using UnityEngine;
 using System.Linq;
 //229EFA
@@ -20,6 +21,8 @@ public class Player : Mover
     private bool isAttacking;
     private bool isRunning;
     private float attackDuration = 3.43f;
+
+    private int NumberOfSwing = 2;
     
 
 
@@ -108,7 +111,12 @@ public class Player : Mover
             float angel = Mathf.MoveTowardsAngle(transform.rotation.eulerAngles.y, lookRotation.eulerAngles.y, rotationSpeed * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0f, angel, 0f);
         }
-        
+
+        if (Time.time - lastAttack > 2f)
+        {
+            animator.SetTrigger("ToIdle");
+            NumberOfSwing = 2;
+        }
     } 
 
     private void Attack(){
@@ -128,11 +136,22 @@ public class Player : Mover
     }
     private void PlayerAttack(){
         if(Time.time - lastAttack > cooldown
-            && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton5))
+            && (Input.GetMouseButton(0) || Input.GetKeyDown(KeyCode.JoystickButton5))
             && fighterData.currStamina >= weapon.weaponData.staminaCost)
         {
             animator.SetFloat("SwingSpeed", attackDuration/cooldown);
-            animator.SetTrigger("Swing");
+            if (NumberOfSwing == 2)
+            {
+                animator.SetTrigger("Swing");
+                NumberOfSwing = 1;
+            }
+            else if (NumberOfSwing == 1)
+            {
+                animator.SetTrigger("Swing2");
+                NumberOfSwing = 2;
+            }
+            
+            
             Invoke("Attack", cooldown/2);
             ChangeStamina(-weapon.weaponData.staminaCost);
             lastAttack = Time.time;
