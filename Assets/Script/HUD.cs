@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public Text HPText, ManaText, levelText, goldAmountText;
+    public Text HPText, ManaText, levelText, goldAmountText, MurderCountText;
     public RectTransform HPBar, ManaBar, XPBar, StaminaBar;
     public CanvasGroup staminaPanel;
     public Image markPrefab;
@@ -28,7 +28,7 @@ public class HUD : MonoBehaviour
 
     public void Start()
     {
-        player = CharacterManager.instance.player;
+        player = GameManager.instance.player;
 
         HPInfo = new StatusInfo
         {

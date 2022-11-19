@@ -19,7 +19,7 @@ public class Weapon : TargetDetect{
             Damage dmg = new Damage
             {
                 origin = fighter.transform.position,
-                damageAmout = weaponData.attack + fighter.fighterData.attack,
+                damageAmout = weaponData.attack + fighter.fighterData.attack + Random.Range(-weaponData.attack/10, weaponData.attack/10),
                 damageType = "physical",
                 pushForce = weaponData.pushForce
             };

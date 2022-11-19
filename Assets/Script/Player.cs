@@ -20,9 +20,10 @@ public class Player : Mover
     private bool isFocusedOnTarget;
     private bool isAttacking;
     private bool isRunning;
-    private float attackDuration = 3.43f;
+    private float attackDuration = 2f;
 
     private int NumberOfSwing = 2;
+    private int murderCount = 0;
     
 
 
@@ -33,7 +34,7 @@ public class Player : Mover
         targetDetect = GetComponent<TargetDetect>();
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
-        weapon = CharacterManager.instance.weapon;
+        weapon = GameManager.instance.weapon;
         
 
         // TODO: implement player data for save/load system
@@ -99,12 +100,12 @@ public class Player : Mover
         if(!isFocusedOnTarget)
         {
             Rotation(new Vector3(horizontal, 0, vertical));
-            CharacterManager.instance.HUD.ResetFocusMark();
+            GameManager.instance.HUD.ResetFocusMark();
         }
         else
         {
             Vector3 targetPosition = targetDetect.SelectTarget(fighterData.searchTargetRadius).transform.position;
-            CharacterManager.instance.HUD.SetFocusMark(targetPosition);
+            GameManager.instance.HUD.SetFocusMark(targetPosition);
             Vector3 direction = targetPosition - transform.position;
             
             Quaternion lookRotation = Quaternion.LookRotation(direction);
@@ -162,6 +163,7 @@ public class Player : Mover
         if((horizontal != 0 || vertical != 0) 
             && Time.time - lastAttack > cooldown)
         {  
+            
             animator.SetBool(isWalkingHash, true);
             if ((Input.GetKey(KeyCode.LeftShift)  || Input.GetKeyDown(KeyCode.JoystickButton2))
                 && !isFocusedOnTarget)
@@ -208,6 +210,12 @@ public class Player : Mover
     public void AddGold(int gold)
     {
         playerData.goldAmount += gold;
+    }
+
+    public void Murder()
+    {
+        murderCount++;
+        GameManager.instance.HUD.MurderCountText.text = murderCount.ToString();
     }
 
     public int GetCurrentLevel(){

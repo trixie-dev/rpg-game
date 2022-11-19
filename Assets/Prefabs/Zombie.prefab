@@ -1003,7 +1003,7 @@ MonoBehaviour:
   chasingRange: 15
   weapon: {fileID: 7750622244732178633}
   exp: 60
-  gold: 60
+  gold: 100
   canvas: {fileID: 6336723394957605741}
 --- !u!114 &5221436423422355569
 MonoBehaviour:
@@ -1034,7 +1034,7 @@ CharacterController:
   serializedVersion: 2
   m_Height: 2.68
   m_Radius: 0.36
-  m_SlopeLimit: 90
+  m_SlopeLimit: 94.45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001

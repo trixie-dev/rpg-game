@@ -30,6 +30,7 @@ public class Fighter : MonoBehaviour
             fighterData.currHP = 0;
             Death();
         }
+        
 
     }
     
