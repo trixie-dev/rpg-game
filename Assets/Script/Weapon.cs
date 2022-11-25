@@ -21,7 +21,8 @@ public class Weapon : TargetDetect{
                 origin = fighter.transform.position,
                 damageAmout = weaponData.attack + fighter.fighterData.attack + Random.Range(-weaponData.attack/10, weaponData.attack/10),
                 damageType = "physical",
-                pushForce = weaponData.pushForce
+                pushForce = weaponData.pushForce,
+                bashCount =  weaponData.bashCount
             };
             coll.gameObject.SendMessage("ReceiveDamage", dmg);
             

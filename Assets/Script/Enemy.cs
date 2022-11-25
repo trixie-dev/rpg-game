@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : Mover
 {
+    private NavMeshAgent agent;
     public int chasingRange = 10;
     public Weapon weapon;
     public int exp;
@@ -18,69 +20,116 @@ public class Enemy : Mover
     public GameObject canvas;
     
 
-    private void Start() {
+    private void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
         startPosition = transform.position;
         targetDetect = GetComponent<TargetDetect>();
         anim = GetComponent<Animator>();
         lastAttack = -cooldown;
+        agent.speed = fighterData.moveSpeed;
     }
     protected override void Update(){
         if (dead)
         {
-            gameObject.GetComponent<CharacterController>().enabled = false;
+            gameObject.GetComponent<CapsuleCollider>().enabled = false;
+            gameObject.GetComponent<NavMeshAgent>().enabled = false;
             return;
         }
-            
-            
-        base.Update();
+
         if (targetDetect.IsTargetInRange(chasingRange))
+        {
             target = targetDetect.SelectTarget(chasingRange);
+            agent.isStopped = false;
+        }
         else
+        {
+            agent.isStopped = true;
             target = null;
+        }
+            
 
         
         if(target != null){
-            Rotation((target.transform.position - transform.position).normalized);
+            if (Time.time - lastImpact > 0.7f)
+            {
+                agent.isStopped = false;
+                agent.angularSpeed = 120;
+                getImpact = false;
+            }
             if (canWalk)
             {
-                isChasing = true;
-                anim.SetBool("isChasing", true);
-                if (getImpact)
+
+
+                agent.stoppingDistance = 1.7f;
+                /*
+                if (agent.remainingDistance <= 1.7f && getImpact == false)
                 {
-                    Move(transform.position - target.transform.position, pushForce);
+                    agent.isStopped = true;
                 }
                 else
                 {
-                    Move(target.transform.position - transform.position, fighterData.moveSpeed);
+                    agent.isStopped = false;
+                }*/
+                
+                
+                
+                
+                
+                anim.SetBool("isChasing", true);
+                if (getImpact)
+                {
+                    anim.SetTrigger("GetDamage");
+                    agent.destination = (transform.position + pushBackDir * pushForce);
+                    agent.angularSpeed = 0;
+                    //fighterData.moveSpeed += (int)pushForce;
+                    //agent.isStopped = true;
+                    
+                    //transform.Translate(-pushBackDir * pushForce * Time.deltaTime);
+                }
+                else
+                {
+                    //Rotation();
+                    //fighterData.moveSpeed = fighterData.baseMoveSpeed;
+                    agent.destination = (target.transform.position );
+                    if(Vector3.Distance(target.transform.position, transform.position) <= weapon.weaponData.range + 0.5f
+                       && Time.time - lastAttack > cooldown
+                       && Time.time - lastImpact > impactTime){
+                
+                        lastAttack = Time.time;
+                        Invoke("Attack", cooldown/2);
+                        anim.SetTrigger("Attack");
+                    }
                 }
                
-            
-                if(Vector3.Distance(target.transform.position, transform.position) <= weapon.weaponData.range + 0.5f
-                   && Time.time - lastAttack > cooldown
-                   && Time.time - lastImpact > impactTime){
-                
-                    lastAttack = Time.time;
-                    Invoke("Attack", cooldown/2);
-                    anim.SetTrigger("Attack");
-                }
+               
             }
             
         }
         else{
             isChasing = false;
             anim.SetBool("isChasing", false);
+            //agent.isStopped = true;
         }
 
-        if (Time.time - lastImpact > 0.5f)
-        {
-            
-            getImpact = false;
-        }
+        
         
         
         
         
     }
+
+    private void Rotation()
+    {
+        // реалізувати поворт за напрямком руху navmeshagent
+        Vector3 direction = agent.velocity;
+        if (direction != Vector3.zero)
+        {
+            Quaternion rotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, fighterData.rotationSpeed * Time.deltaTime);
+        }
+    }
+
     protected override void ReceiveDamage(Damage dmg)
     {
         base.ReceiveDamage(dmg);
@@ -92,14 +141,18 @@ public class Enemy : Mover
         if (dmg.pushForce > 0)
         {
             pushForce = dmg.pushForce;
-            pushBackDir = (transform.position - dmg.origin).normalized;
             
-            
-            
+            pushBackDir = (transform.position - dmg.origin);
+            fighterData.currBash += dmg.bashCount;
+            if(fighterData.currBash >= fighterData.maxBash)
+            {
+                
+                fighterData.currBash = 0;
+            }
         }
         
-        anim.SetTrigger("GetDamage");
-        GameManager.instance.ShowText((-dmg.damageAmout).ToString(), 20, new Color(1f, 0f, 0f, 1), transform.position + pushBackDir, (Vector3.up + pushBackDir)* 20, 1.0f);
+        
+        GameManager.instance.ShowText((-dmg.damageAmout).ToString(), 20, new Color(1f, 0f, 0f, 1), transform.position + pushBackDir,  (Vector3.up + pushBackDir)* 40, 2.0f);
     }
     protected override void Death()
     {
@@ -110,9 +163,9 @@ public class Enemy : Mover
             {
                 Player player = c.GetComponent<Player>();
                 player.AddExp(exp);
-                GameManager.instance.ShowText("+" + exp.ToString() + " exp", 20, new Color(0, 1, 0, 1), transform.position + pushBackDir, Vector3.up * 20, 2.0f);
+                GameManager.instance.ShowText("+" + exp.ToString() + " exp", 20, new Color(0, 1, 0, 1), transform.position + pushBackDir, (Vector3.up + pushBackDir)* 40, 2.0f);
                 player.AddGold(gold);
-                GameManager.instance.ShowText("+" + gold + " gold", 20, new Color(1, 1, 0, 1), transform.position + pushBackDir + new Vector3(0, 1.5f, 0), Vector3.up * 20, 2.0f);
+                GameManager.instance.ShowText("+" + gold + " gold", 20, new Color(1, 1, 0, 1), transform.position + pushBackDir + new Vector3(0, 1.5f, 0), (Vector3.up + pushBackDir)* 40, 2.0f);
                 player.Murder();
             }
         }

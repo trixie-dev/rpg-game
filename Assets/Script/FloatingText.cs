@@ -32,6 +32,6 @@ public class FloatingText
             Hide();
         txt.color = new Color(txt.color.r, txt.color.g, txt.color.b, 1 - ((Time.time - lastShown) / duration));
         go.transform.position += motion * Time.deltaTime;
-        Debug.Log(go.transform.position);
+        
     }
 }

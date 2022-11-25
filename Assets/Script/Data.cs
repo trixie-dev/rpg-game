@@ -17,9 +17,14 @@ public struct FighterData
     public int baseMoveSpeed;
     public int moveSpeed;
     public int moveSpeedFocused;
+    public int rotationSpeed;
     public int attack;
     public int agility;
     public int intellect;
+
+    public int maxBash;
+    public int currBash;
+    
     public float physicalDefence; // float: 0-1 
     public float magicalDefence; // float: 0-1 
 
@@ -46,6 +51,7 @@ public struct WeaponData
     public int price;
     public float pushForce;
     public int staminaCost;
+    public int bashCount;
 }
 
 public struct Damage
@@ -54,6 +60,7 @@ public struct Damage
     public int damageAmout;
     public float pushForce;
     public string damageType;
+    public int bashCount;
 }
 
 

@@ -3,20 +3,26 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public Text HPText, ManaText, levelText, goldAmountText, MurderCountText;
-    public RectTransform HPBar, ManaBar, XPBar, StaminaBar;
+    public Text HPText, StaminaText, levelText, goldAmountText, MurderCountText;
+    public RectTransform HPBarMask, StaminaBarMask, XPBar, StaminaBar;
     public CanvasGroup staminaPanel;
     public Image markPrefab;
     public Image enemyHp;
+    public RawImage HPBarRaw, ManaBarRaw;
     [SerializeField] private Vector3 offsetEnemyHpBar;
 
     public Camera cam;
 
     public struct StatusInfo
     {
+        
         public Text innerText;
         public int maxValue, currValue;
+        public RawImage rawImage;
         public RectTransform bar;
+        public Rect uvRect;
+        public Vector2 barSize;
+        
     }
 
     private StatusInfo HPInfo;
@@ -28,36 +34,52 @@ public class HUD : MonoBehaviour
 
     public void Start()
     {
+        
         player = GameManager.instance.player;
 
         HPInfo = new StatusInfo
         {
             innerText = HPText,
-            bar = HPBar
+            rawImage = HPBarRaw,
+            bar = HPBarMask,
+            barSize = HPBarMask.sizeDelta
+            
         };
-        ManaInfo = new StatusInfo
-        {
-            innerText = ManaText,
-            bar = ManaBar
-        };
+        HPInfo.uvRect = HPInfo.rawImage.uvRect;
+        
         StaminaInfo = new StatusInfo
         {
-            bar = StaminaBar
+            innerText = StaminaText,
+            rawImage = ManaBarRaw,
+            bar = StaminaBarMask,
+            barSize = StaminaBarMask.sizeDelta
+            
         };
+        StaminaInfo.uvRect = StaminaInfo.rawImage.uvRect;
+        
+        ManaInfo.uvRect = HPInfo.rawImage.uvRect;
+        
         XPInfo = new StatusInfo
         {
             bar = XPBar
         };
-
+        
     }
     private void Update()
     {
+        // -- Bar effects --
+        // HP
+        Rect uvRectHP = HPInfo.rawImage.uvRect;
+        uvRectHP.x -= 0.06f * Time.deltaTime;
+        HPInfo.rawImage.uvRect = uvRectHP;
+        // Stamina
+        Rect uvRectStamina = StaminaInfo.rawImage.uvRect;
+        uvRectStamina.x -= 0.06f * Time.deltaTime;
+        StaminaInfo.rawImage.uvRect = uvRectStamina;
+        
         // Updating both HP and Mana variables
         HPInfo.currValue = player.fighterData.currHP;
         HPInfo.maxValue = player.fighterData.maxHP;
-
-        ManaInfo.currValue = player.fighterData.currMana;
-        ManaInfo.maxValue = player.fighterData.maxMana;
 
         StaminaInfo.currValue = player.fighterData.currStamina;
         StaminaInfo.maxValue = player.fighterData.maxStamina;
@@ -66,36 +88,24 @@ public class HUD : MonoBehaviour
         if (HPInfo.currValue <= 0)
         {
             HPInfo.innerText.text = "0 / " + HPInfo.maxValue.ToString();
-            HPInfo.bar.localScale = Vector3.zero;
+            HPInfo.bar.sizeDelta = Vector2.zero;
         }
         else
         {
             HPInfo.innerText.text = HPInfo.currValue.ToString() + " / " + HPInfo.maxValue.ToString();
-            HPInfo.bar.localScale = new Vector3((float)HPInfo.currValue / (float)HPInfo.maxValue, 1, 1);
+            HPInfo.bar.sizeDelta = new Vector2(HPInfo.barSize.x * (float)(HPInfo.currValue / (float)HPInfo.maxValue), HPInfo.barSize.y);
         }
 
-        // Updating Mana's interface
-        if (ManaInfo.currValue <= 0)
-        {
-            ManaInfo.innerText.text = "0 / " + ManaInfo.maxValue.ToString();
-            ManaInfo.bar.localScale = Vector3.zero;
-        }
-        else
-        {
-            ManaInfo.innerText.text = ManaInfo.currValue.ToString() + " / " + ManaInfo.maxValue.ToString();
-            ManaInfo.bar.localScale = new Vector3((float)ManaInfo.currValue / (float)ManaInfo.maxValue, 1, 1);
-        }
         // Updating Stamina's interface
         if (StaminaInfo.currValue <= 0)
         {
-            StaminaInfo.bar.localScale = Vector3.zero;
-            staminaPanel.alpha = 1;
+            StaminaInfo.innerText.text = "0 / " + StaminaInfo.maxValue.ToString();
+            StaminaInfo.bar.sizeDelta = Vector2.zero;
         }
         else
         {
-            float scale = (float)StaminaInfo.currValue / (float)StaminaInfo.maxValue;
-            StaminaInfo.bar.localScale = new Vector3(1, scale, 1);
-            staminaPanel.alpha = 1 - scale;
+            StaminaInfo.innerText.text = StaminaInfo.currValue.ToString() + " / " + StaminaInfo.maxValue.ToString();
+            StaminaInfo.bar.sizeDelta = new Vector2(StaminaInfo.barSize.x * (float)StaminaInfo.currValue / (float)StaminaInfo.maxValue, StaminaInfo.barSize.y);
         }
 
         int currLevel = player.playerData.level;
